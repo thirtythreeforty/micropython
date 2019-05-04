@@ -20,6 +20,26 @@ function download_s110_nrf51_8_0_0
 }
 
 
+function download_s130_nrf51_2_0_1
+{
+    echo ""
+    echo "####################################"
+    echo "### Downloading s130_nrf51_2.0.1 ###"
+    echo "####################################"
+    echo ""
+
+    mkdir -p $1/s130_nrf51_2.0.1
+    cd $1/s130_nrf51_2.0.1
+    wget --post-data="fileName=DeviceDownload&ids=7DD15F0CF775467687CE5846D9C24319" https://www.nordicsemi.com/api/sitecore/Products/MedialibraryZipDownload2
+    mv MedialibraryZipDownload2 temp.zip
+    unzip -u temp.zip
+    unzip -u s130nrf51201.zip
+    rm s130nrf51201.zip
+    rm temp.zip
+    cd -
+}
+
+
 function download_s132_nrf52_6_0_0
 {
     echo ""
@@ -65,12 +85,15 @@ SCRIPT_DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ $# -eq 0 ]; then 
     echo "No Bluetooth LE stack defined, downloading all."
     download_s110_nrf51_8_0_0 ${SCRIPT_DIR}
+    download_s130_nrf51_2_0_1 ${SCRIPT_DIR}
     download_s132_nrf52_6_0_0 ${SCRIPT_DIR}
     download_s140_nrf52_6_0_0 ${SCRIPT_DIR}
 else 
     case $1 in
         "s110_nrf51" )
             download_s110_nrf51_8_0_0 ${SCRIPT_DIR} ;;
+        "s130_nrf51" )
+            download_s130_nrf51_2_0_1 ${SCRIPT_DIR} ;;
         "s132_nrf52_2_0_1" )
             download_s132_nrf52_6_0_0 ${SCRIPT_DIR} ;;
         "s132_nrf52_3_0_0" )

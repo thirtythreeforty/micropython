@@ -38,7 +38,7 @@
 #include "nrf_sdm.h"
 #include "ble.h"
 #include "ble_hci.h"
-#if !NRF51
+#if !(BLUETOOTH_SD == 110)
 #include "nrf_nvic.h"
 #endif
 
@@ -51,7 +51,7 @@
 #define BLE_SLAVE_LATENCY            0
 #define BLE_CONN_SUP_TIMEOUT         MSEC_TO_UNITS(4000, UNIT_10_MS)
 
-#if NRF51
+#if (BLUETOOTH_SD == 110)
   #define MAX_TX_IN_PROGRESS         (6)
 #else
   #define MAX_TX_IN_PROGRESS         (10)
@@ -71,7 +71,7 @@ static uint8_t bluetooth_adv_data[BLE_GAP_ADV_SET_DATA_SIZE_MAX];
 static uint8_t bluetooth_sr_data[BLE_GAP_ADV_SET_DATA_SIZE_MAX];
 #endif
 
-#if NRF51
+#if (BLUETOOTH_SD == 110)
 void softdevice_assert_handler(uint32_t pc, uint16_t line_number, const uint8_t * p_file_name) {
     printf("ERROR: SoftDevice assert!!!\n");
 }
@@ -81,23 +81,31 @@ void softdevice_assert_handler(uint32_t id, uint32_t pc, uint32_t info) {
 }
 #endif
 
-#if !NRF51
+#if !(BLUETOOTH_SD == 110)
 #if BLUETOOTH_LFCLK_RC
 STATIC const nrf_clock_lf_cfg_t clock_config = {
     .source = NRF_CLOCK_LF_SRC_RC,
     .rc_ctiv = 16,
     .rc_temp_ctiv = 2,
+#if (BLUETOOTH_SD == 130)
+    .xtal_accuracy = NRF_CLOCK_LF_XTAL_ACCURACY_250_PPM
+#else
     .accuracy = NRF_CLOCK_LF_ACCURACY_250_PPM
+#endif
 };
 #else
 STATIC const nrf_clock_lf_cfg_t clock_config = {
     .source = NRF_CLOCK_LF_SRC_XTAL,
     .rc_ctiv = 0,
     .rc_temp_ctiv = 0,
+#if (BLUETOOTH_SD == 130)
+    .xtal_accuracy = NRF_CLOCK_LF_XTAL_ACCURACY_20_PPM
+#else
     .accuracy = NRF_CLOCK_LF_ACCURACY_20_PPM
+#endif
 };
 #endif // BLUETOOTH_LFCLK_RC
-#endif // !NRF51
+#endif // !(BLUETOOTH_SD == 110)
 
 STATIC const uint8_t ble_default_device_name[] = "MPY";
 
@@ -117,7 +125,7 @@ STATIC int mp_bt_errno(uint32_t err_code) {
     case NRF_ERROR_INVALID_LENGTH:
         return MP_EINVAL;
     case NRF_ERROR_NO_MEM:
-    #if NRF51
+    #if (BLUETOOTH_SD == 110)
     case BLE_ERROR_NO_TX_BUFFERS:
     #else
     case NRF_ERROR_RESOURCES:
@@ -146,7 +154,7 @@ int mp_bt_enable(void) {
     bluetooth_adv_handle = BLE_GAP_ADV_SET_HANDLE_NOT_SET;
 #endif
 
-#if NRF51
+#if (BLUETOOTH_SD == 110)
   #if BLUETOOTH_LFCLK_RC
     uint32_t err_code = sd_softdevice_enable(NRF_CLOCK_LFCLKSRC_RC_250_PPM_250MS_CALIBRATION,
                                              softdevice_assert_handler);
@@ -166,14 +174,21 @@ int mp_bt_enable(void) {
 
     sd_nvic_EnableIRQ(SD_EVT_IRQn);
 
-#if NRF51
+#if (BLUETOOTH_SD == 110)
     ble_enable_params_t ble_enable_params = {0};
     ble_enable_params.gatts_enable_params.attr_tab_size = BLE_GATTS_ATTR_TAB_SIZE_DEFAULT;
     ble_enable_params.gatts_enable_params.service_changed = 0;
     err_code = sd_ble_enable(&ble_enable_params);
 #else
     uint32_t app_ram_start_cfg = 0x200039c0;
+#if (BLUETOOTH_SD == 130)
+    ble_enable_params_t ble_enable_params = {0};
+    ble_enable_params.gatts_enable_params.attr_tab_size = BLE_GATTS_ATTR_TAB_SIZE_DEFAULT;
+    ble_enable_params.gatts_enable_params.service_changed = 0;
+    err_code = sd_ble_enable(&ble_enable_params, &app_ram_start_cfg);
+#else
     err_code = sd_ble_enable(&app_ram_start_cfg); // 8K SD headroom from linker script.
+#endif
 #endif
     if (err_code != 0) { // sd_ble_enable
         return mp_bt_errno(err_code);
@@ -457,7 +472,7 @@ static void sd_evt_handler(uint32_t evt_id) {
 
 static uint8_t m_ble_evt_buf[sizeof(ble_evt_t) + (GATT_MTU_SIZE_DEFAULT)] __attribute__ ((aligned (4)));
 
-#ifdef NRF51
+#if (BLUETOOTH_SD == 110)
 void SWI2_IRQHandler(void) {
 #else
 void SWI2_EGU2_IRQHandler(void) {

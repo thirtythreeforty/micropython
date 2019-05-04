@@ -7,6 +7,12 @@ ifeq ($(SD), s110)
 	CFLAGS += -DBLUETOOTH_SD_DEBUG=1
 	CFLAGS += -DBLUETOOTH_SD=110
 
+else ifeq ($(SD), s130)
+	INC += -Idrivers/bluetooth/$(SD)_$(MCU_VARIANT)_$(SOFTDEV_VERSION)/$(SD)_$(MCU_VARIANT)_$(SOFTDEV_VERSION)_API/include
+	INC += -Idrivers/bluetooth/$(SD)_$(MCU_VARIANT)_$(SOFTDEV_VERSION)/$(SD)_$(MCU_VARIANT)_$(SOFTDEV_VERSION)_API/include/$(MCU_VARIANT)
+	CFLAGS += -DBLUETOOTH_SD_DEBUG=1
+	CFLAGS += -DBLUETOOTH_SD=130
+
 else ifeq ($(SD), s132)
 	INC += -Idrivers/bluetooth/$(SD)_$(MCU_VARIANT)_$(SOFTDEV_VERSION)/$(SD)_$(MCU_VARIANT)_$(SOFTDEV_VERSION)_API/include
 	INC += -Idrivers/bluetooth/$(SD)_$(MCU_VARIANT)_$(SOFTDEV_VERSION)/$(SD)_$(MCU_VARIANT)_$(SOFTDEV_VERSION)_API/include/$(MCU_VARIANT)

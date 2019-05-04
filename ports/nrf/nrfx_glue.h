@@ -35,7 +35,7 @@
 #if BLUETOOTH_SD
 
 #include "extmod/modbluetooth.h"
-#if NRF51
+#if (BLUETOOTH_SD == 110)
 #include "nrf_soc.h"
 #else
 #include "nrf_nvic.h"

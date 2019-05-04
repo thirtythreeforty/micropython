@@ -95,18 +95,18 @@ For example:
 
 ## Target Boards and Make Flags
 
-Target Board (BOARD) | Bluetooth Stack (SD)    | Bluetooth Support      | Flash Util
----------------------|-------------------------|------------------------|-------------------------------
-microbit             | s110                    | Peripheral             | [PyOCD](#pyocdopenocd-targets)
-pca10000             | s110                    | Peripheral             | [Segger](#segger-targets)
-pca10001             | s110                    | Peripheral             | [Segger](#segger-targets)
-pca10028             | s110                    | Peripheral             | [Segger](#segger-targets)
-pca10031             | s110                    | Peripheral             | [Segger](#segger-targets)
-wt51822_s4at         | s110                    | Peripheral             | Manual, see [datasheet](https://4tronix.co.uk/picobot2/WT51822-S4AT.pdf) for pinout
-pca10040             | s132                    | Peripheral and Central | [Segger](#segger-targets)
-feather52            | s132                    | Peripheral and Central | Manual, SWDIO and SWCLK solder points on the bottom side of the board
-arduino_primo        | s132                    | Peripheral and Central | [PyOCD](#pyocdopenocd-targets)
-pca10056             | s140                    | Peripheral and Central | [Segger](#segger-targets)
+Target Board (BOARD) | Bluetooth Stack (SD)    | Bluetooth Support             | Flash Util
+---------------------|-------------------------|-------------------------------|-------------------------------
+microbit             | s110 or s130            | Peripheral, Central with s130 | [PyOCD](#pyocdopenocd-targets)
+pca10000             | s110 or s130            | Peripheral, Central with s130 | [Segger](#segger-targets)
+pca10001             | s110 or s130            | Peripheral, Central with s130 | [Segger](#segger-targets)
+pca10028             | s110 or s130            | Peripheral, Central with s130 | [Segger](#segger-targets)
+pca10031             | s110 or s130            | Peripheral, Central with s130 | [Segger](#segger-targets)
+wt51822_s4at         | s110 or s130            | Peripheral, Central with s130 | Manual, see [datasheet](https://4tronix.co.uk/picobot2/WT51822-S4AT.pdf) for pinout
+pca10040             | s132                    | Peripheral, Central           | [Segger](#segger-targets)
+feather52            | s132                    | Peripheral, Central           | Manual, SWDIO and SWCLK solder points on the bottom side of the board
+arduino_primo        | s132                    | Peripheral, Central           | [PyOCD](#pyocdopenocd-targets)
+pca10056             | s140                    | Peripheral, Central           | [Segger](#segger-targets)
 
 ## Segger Targets
 
